@@ -15,15 +15,15 @@ class Holmes
       end
       
       pattern = extensions.join_with_prefix('.*\.', '|')
-      File.open(file_name).read().scan(/#{pattern}/)
+      { :file => file_name, :references => File.open(file_name).read().scan(/#{pattern}/) }
     end
     
     def search_in_dir(path, extensions)
-      content = []
-      Dir.foreach path do |filename|
-        content << self.search_in_file("#{path}/#{filename}", extensions) if File.file? "#{path}/#{filename}"
+      heap = []
+      Dir.foreach path do |file_name|
+        heap << self.search_in_file("#{path}/#{file_name}", extensions) if File.file? "#{path}/#{file_name}"
       end
-      content
+      heap
     end
   end  
 end
